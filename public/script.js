@@ -11,11 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
     urlForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const url = urlInput.value.trim();
+        let url = urlInput.value.trim();
         
         if (!url) {
             showError('Please enter a valid URL');
             return;
+        }
+        
+        // Add https:// if the URL doesn't have a protocol
+        if (!url.match(/^https?:\/\//)) {
+            url = 'https://' + url;
         }
         
         // Show loading indicator

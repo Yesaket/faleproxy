@@ -16,7 +16,17 @@ describe('Integration Tests', () => {
   beforeAll(async () => {
     // Create a temporary test app file
     await execAsync('cp app.js app.test.js');
-    await execAsync(`sed -i '' 's/const PORT = 3001/const PORT = ${TEST_PORT}/' app.test.js`);
+    
+    // Use a cross-platform approach to modify the port
+    // Read the file content
+    const fs = require('fs');
+    const appContent = fs.readFileSync('app.test.js', 'utf8');
+    
+    // Replace the port
+    const modifiedContent = appContent.replace(/const PORT = 3001/g, `const PORT = ${TEST_PORT}`);
+    
+    // Write back to the file
+    fs.writeFileSync('app.test.js', modifiedContent, 'utf8');
     
     // Start the test server
     server = require('child_process').spawn('node', ['app.test.js'], {
